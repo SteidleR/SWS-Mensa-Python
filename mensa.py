@@ -1,6 +1,7 @@
 import json
 from typing import List
 import os
+
 os.environ['WDM_LOG_LEVEL'] = '0'
 
 from bs4 import BeautifulSoup
@@ -40,7 +41,7 @@ def get_locations(browser: object) -> dict:
 
     locations = {}
     for opt in select_location.options:
-        locations[opt.get_attribute("value")] = opt.text
+        locations[int(opt.get_attribute("value"))] = opt.text
 
     return locations
 
@@ -66,6 +67,11 @@ def get_today_menu(browser: object, loc_id: int, lang: str = "en") -> List[dict]
 
     # change location to specified location id
     select_location = Select(browser.find_element(value="listbox-locations"))
+
+    # check if location id is valid
+    if str(loc_id) not in [opt.get_attribute("value") for opt in select_location.options]:
+        return [{"error": "Unknown location id"}]
+
     select_location.select_by_value(str(loc_id))
 
     # load html content to BeautifulSoup
@@ -77,28 +83,28 @@ def get_today_menu(browser: object, loc_id: int, lang: str = "en") -> List[dict]
 
     menu = []
 
-    nextIsMenu = False
-    categoryName = ""
+    next_is_menu = False
+    category_name = ""
     for div in divs:
 
-        isCat = div.find("div", {"class": "gruppenname"})
-        if isCat:
-            categoryName = isCat.text.strip()
-            categoryName = categoryName.replace("*", "").strip()
-            categoryName = categoryName[0] + categoryName[1:].lower()
+        is_category = div.find("div", {"class": "gruppenname"})
+        if is_category:
+            category_name = is_category.text.strip()
+            category_name = category_name.replace("*", "").strip()
+            category_name = category_name[0] + category_name[1:].lower()
 
-            nextIsMenu = False if categoryName in ("Hinweis", "Information") else True
+            next_is_menu = False if category_name in ("Hinweis", "Information") else True
 
             continue
 
-        elif nextIsMenu:
+        elif next_is_menu:
             try:
-                mealName = div.find("div", {"class": "visible-xs-block"}).text.strip()
+                meal_name = div.find("div", {"class": "visible-xs-block"}).text.strip()
             except AttributeError:
                 continue
 
-            if mealName.lower() == "geschlossen":
-                nextIsMenu = False
+            if meal_name.lower() == "geschlossen":
+                next_is_menu = False
                 continue
 
             notes = div["lang"].split(",")
@@ -109,6 +115,9 @@ def get_today_menu(browser: object, loc_id: int, lang: str = "en") -> List[dict]
             else:
                 notes = None
 
-            menu.append({"category": categoryName, "meal": mealName, "ingredients": notes})
+            menu.append({"category": category_name, "meal": meal_name, "ingredients": notes})
 
     return menu
+
+print(get_locations(init_browser()))
+print(get_today_menu(init_browser(), 16, "en"))
