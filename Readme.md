@@ -1,8 +1,11 @@
 # SWS Canteen Parser
 
-Python library to fetch menu from sws2.maxmanager.xyz.
+Python code to fetch menu from sws2.maxmanager.xyz.
 
 ## Documentation
+
+Put 'mensa.py' in same folder as your python script.
+
 ### Initialize browser
 Initialize a new selenium webdriver (chrome) object.
 ```python

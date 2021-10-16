@@ -1,4 +1,3 @@
-import re
 import json
 from typing import List
 import os
@@ -9,9 +8,7 @@ from selenium import webdriver
 from selenium.webdriver.support.select import Select
 from webdriver_manager.chrome import ChromeDriverManager
 
-url = r"https://sws2.maxmanager.xyz/"
-roles = ('student', 'employee', 'other')
-price_pattern = re.compile('\d+,\d\d')
+url = "https://sws2.maxmanager.xyz/"
 
 ingredients = json.load(open("ingredients.json"))
 
