@@ -23,7 +23,7 @@ locations = get_locations(browser)
 ```
 
 Example dictionary of locations
-```json
+```python
 {
   2: 'MENSA STUTTGART-VAIHINGEN',
   16: 'MENSA CENTRAL', 
@@ -46,7 +46,7 @@ menu = get_today_menu(browser, 16, "en")
 ```
 
 Example dictionary of menu
-```json
+```python
 [
   {
     'category': 'Main dish', 
