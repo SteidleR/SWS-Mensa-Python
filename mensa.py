@@ -118,6 +118,3 @@ def get_today_menu(browser: object, loc_id: int, lang: str = "en") -> List[dict]
             menu.append({"category": category_name, "meal": meal_name, "ingredients": notes})
 
     return menu
-
-print(get_locations(init_browser()))
-print(get_today_menu(init_browser(), 16, "en"))
